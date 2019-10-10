@@ -1,0 +1,17 @@
+{
+  "name": "healthstack-backend",
+  "version": "0.1.0",
+  "description": "HealthStack application server developed with Expressjs, Socket.IO and CouchDb.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "healthstack-backend",
+    "Expressjs",
+    "socket.io",
+    "couchdb"
+  ],
+  "author": "HealthStack",
+  "license": "ISC"
+}
