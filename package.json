@@ -13,5 +13,9 @@
     "couchdb"
   ],
   "author": "HealthStack",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nano": "^8.1.0"
+  }
 }
