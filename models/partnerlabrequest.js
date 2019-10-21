@@ -2,7 +2,7 @@ const { DB_HOST, DB_NAME } = require('../config/database_setup');
 const nano = require('nano')(DB_HOST);
 const db = nano.db.use(DB_NAME);
 
-exports.getPartnerLabRequest = (id) => {
+exports.getPartnerLabRequestById = (id) => {
     return db.get(id);
 };
 
