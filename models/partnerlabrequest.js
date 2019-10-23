@@ -1,25 +1,33 @@
+const util = require('util');
 const { DB_HOST, DB_NAME } = require('../config/database_setup');
-const nano = require('nano')(DB_HOST);
-const db = nano.db.use(DB_NAME);
+const couchbase = require('couchbase');
+const bucket = (new couchbase.Cluster(DB_HOST)).openBucket(DB_NAME);
 
 exports.getPartnerLabRequestById = (id) => {
-    return db.get(id);
+    let get = util.promisify(bucket.get);
+    return get(id);
 };
 
 exports.createPartnerLabRequest = (partnerLabRequest) => {
-    return db.insert(partnerLabRequest);
+    let insert = util.promisify(bucket.insert);
+    return insert(partnerLabRequest.key, partnerLabRequest);
 };
 
 exports.getPartnerLabRequests = () => {
-    return db.view('_design/partnerLabRequest', 'partnerLabRequests-view');
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab_request']);
 };
 
-exports.getLabRequestByPartnerLab = () => {
-    return db.view('_design/partnerLabRequest', 'labRequestByPartnerLab-view');
+exports.getLabRequestByPartnerLab = (partnerLabName) => {
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND partner_lab.name=$2';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab_request', partnerLabName]);
 };
 
 exports.updatePartnerLabRequest = (partnerLabRequest) => {
-    return db.atomic('_design/partnerLabRequest', 'inplace', partnerLabRequest._id, partnerLabRequest);
+    let upsert = util.promisify(bucket.upsert);
+    return upsert(partnerLabRequest.key, partnerLabRequest);
 };
 
 
