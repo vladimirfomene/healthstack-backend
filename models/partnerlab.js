@@ -1,38 +1,44 @@
+const util = require('util');
 const { DB_HOST, DB_NAME } = require('../config/database_setup');
-const nano = require('nano')(DB_HOST);
-const db = nano.db.use(DB_NAME);
+const couchbase = require('couchbase');
+const bucket = (new couchbase.Cluster(DB_HOST)).openBucket(DB_NAME);
 
 
 exports.getPartnerLabById = (id) => {
-    return db.get(id);
+    let get = util.promisify(bucket.get);
+    return get(id);
 };
 
 exports.getPartnerLabByName = (name) => {
-    return db.view('_design/partnerLab', 'name-view', {
-        'key': name
-    });
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(name) LIKE %$2%';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab', name.toLowerCase()]);
 };
 
 exports.getPartnerLabByEmail = (email) => {
-    return db.view('_design/partnerLab', 'email-view', {
-        'key': email
-    });
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(email) LIKE %$2%';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab', email.toLowerCase()]);
 };
 
 exports.getPartnerLabByTel = (tel) => {
-    return db.view('_design/partnerLab', 'tel-view', {
-        'key': tel
-    });
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND tel LIKE %$2%';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab', tel]);
 };
 
 exports.getPartnerLabs = () => {
-    return db.view('_design/partnerLab', 'name-view');
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab']);
 }
 
 exports.createPartnerLabs = (partnerLab) => {
-    return db.insert(partnerLab);
+    let insert = util.promisify(bucket.insert);
+    return insert(partner_lab.key, partner_lab);
 };
 
 exports.updatePartnerLabs = (partnerLab) => {
-    return db.atomic('_design/partnerLab', 'inplace', partnerLab._id, partnerLab);
+    let upsert = util.promisify(bucket.upsert);
+    return upsert(partnerLab.key, partnerLab);
 };
