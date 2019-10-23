@@ -1,13 +1,14 @@
 const exams = require('../models/exam');
+const couchbase = require('couchbase');
 
 
 exports.getExamById = (req, res, next) => {
     exams.getExamById(req.params.id)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        return res.status(200).json(resp.value);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'exam query failed';
         return next(err);
@@ -17,8 +18,7 @@ exports.getExamById = (req, res, next) => {
 exports.createExam = (req, res, next) => {
     exams.createExam(req.body.exam)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.exam);
     })
     .catch(err => {
         err.status = 500;
@@ -30,8 +30,7 @@ exports.createExam = (req, res, next) => {
 exports.updateExam = (req, res, next) => {
     exams.updateExam(req.body.exam)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.exam);
     })
     .catch(err => {
         err.status = 500;
@@ -47,6 +46,7 @@ let getAllExams = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'exam query failed';
         return next(err);
@@ -60,6 +60,7 @@ let getExamByName = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'exam query failed';
         return next(err);

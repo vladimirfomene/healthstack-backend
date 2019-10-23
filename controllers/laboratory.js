@@ -1,12 +1,13 @@
 const laboratories = require('../models/laboratory');
+const couchbase = require('couchbase');
 
 exports.getLaboratoryById = (req, res, next) => {
     laboratories.getLaboratoryById(req.params.id)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        return res.status(200).json(resp.value);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'laboratory query failed';
         return next(err);
@@ -16,8 +17,7 @@ exports.getLaboratoryById = (req, res, next) => {
 exports.createLaboratory = (req, res, next) => {
     laboratories.createLaboratory(req.body.laboratory)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.laboratory);
     })
     .catch(err => {
         err.status = 500;
@@ -29,8 +29,7 @@ exports.createLaboratory = (req, res, next) => {
 exports.updateLaboratory = (req, res, next) => {
     laboratories.updateLaboratory(req.body.laboratory)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.laboratory);
     })
     .catch(err => {
         err.status = 500;

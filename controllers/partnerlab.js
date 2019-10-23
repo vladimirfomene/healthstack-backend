@@ -1,12 +1,13 @@
 const partnerLabs = require('../models/partnerlab');
+const couchbase = require('couchbase');
 
 exports.getPartnerLabById = (req, res, next) => {
     partnerLabs.getPartnerLabById(req.params.id)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        return res.status(200).json(resp.value);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'partnerlab  query failed';
         return next(err);
@@ -16,8 +17,7 @@ exports.getPartnerLabById = (req, res, next) => {
 exports.createPartnerLab = (req, res, next) => {
     partnerLabs.createPartnerLabs(req.body.partnerLab)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.partnerLab);
     })
     .catch(err => {
         err.status = 500;
@@ -29,8 +29,7 @@ exports.createPartnerLab = (req, res, next) => {
 exports.updatePartnerLab = (req, res, next) => {
     partnerLabs.updatePartnerLabs(req.body.partnerLab)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.partnerLab);
     })
     .catch(err => {
         err.status = 500;
@@ -54,6 +53,7 @@ let getPartnerLabByName = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'partnerlab query failed';
         return next(err);
@@ -67,6 +67,7 @@ let getPartnerLabByEmail = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'partnerlab query failed';
         return next(err);
@@ -80,6 +81,7 @@ let getPartnerLabByTel = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'partnerlab query failed';
         return next(err);
@@ -93,6 +95,7 @@ let getAllPartnerLabs = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'partnerlab query failed';
         return next(err);

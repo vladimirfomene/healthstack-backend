@@ -1,12 +1,13 @@
 const patients = require('../models/patient');
+const couchbase = require('couchbase');
 
 exports.getPatientById = (req, res, next) => {
     patients.getPatientById(req.params.id)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        return res.status(200).json(resp.value);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'patient query failed';
         return next(err);
@@ -16,8 +17,7 @@ exports.getPatientById = (req, res, next) => {
 exports.createPatient = (req, res, next) => {
     patients.createPatient(req.body.patient)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.patient);
     })
     .catch(err => {
         err.status = 500;
@@ -40,6 +40,7 @@ let getPatientByName = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'patient query failed';
         return next(err);
@@ -53,6 +54,7 @@ let getPatientByEmail = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'patient query failed';
         return next(err);
@@ -66,6 +68,7 @@ let getPatientByPhoneNumber = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'patient query failed';
         return next(err);
@@ -79,6 +82,7 @@ let getAllPatients = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'patient query failed';
         return next(err);

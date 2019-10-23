@@ -1,11 +1,11 @@
 const labrequests = require('../models/labrequest');
+const couchbase = require('couchbase');
 
 
 exports.createLabRequest = (req, res, next) => {
     labrequests.createLabRequest(req.body.labRequest)
     then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.labRequest);
     })
     .catch(err => {
         err.status = 500;
@@ -17,10 +17,10 @@ exports.createLabRequest = (req, res, next) => {
 exports.getLabRequestById = (req, res, next) => {
     labrequests.getLabRequestById(req.params.id)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        return res.status(200).json(resp.value);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'labrequest query failed';
         return next(err);
@@ -30,8 +30,7 @@ exports.getLabRequestById = (req, res, next) => {
 exports.updateLabRequest = (req, res, next) => {
     labrequests.updateLabRequest(req.body.labRequest)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.labRequest);
     })
     .catch(err => {
         err.status = 500;
@@ -47,6 +46,7 @@ let getLabRequestByEmail = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'labrequest query failed';
         return next(err);
@@ -60,6 +60,7 @@ let getLabRequestByName = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'labrequest query failed';
         return next(err);
@@ -74,6 +75,7 @@ let getLabRequestByPhoneNumber = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'labrequest query failed';
         return next(err);
@@ -95,6 +97,7 @@ let getAllLabRequests = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'labrequest query failed';
         return next(err);

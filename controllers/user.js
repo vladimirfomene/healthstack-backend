@@ -1,14 +1,15 @@
 const users = require('../models/user');
+const couchbase = require('couchbase');
 
 
 
 exports.getUserById = (req, res, next) => {
     users.getUserById(req.params.id)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        return res.status(200).json(resp.value);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'User query failed';
         return next(err);
@@ -22,6 +23,7 @@ let getUserByEmail = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'User query failed'
         return next(err);
@@ -40,6 +42,7 @@ let getAllUsers = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'User query failed';
         return next(err);
@@ -50,8 +53,7 @@ let getAllUsers = (req, res, next) => {
 exports.createUser = (req, res, next) => {
     users.createUser(req.body.user)
     .then(resp => {
-        if(resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.user);
     })
     .catch(err => {
         err.status = 500;
@@ -63,8 +65,7 @@ exports.createUser = (req, res, next) => {
 exports.updateUser = (req, res, next) => {
     users.updateUser(req.body.user)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.user);
     })
     .catch(err => {
         err.status = 500;

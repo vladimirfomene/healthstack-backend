@@ -1,13 +1,14 @@
 const insurances = require('../models/insurance');
+const couchbase = require('couchbase');
 
 
 exports.getInsuranceById = (req, res, next) => {
     insurances.getInsuranceById(req.params.id)
     .then(resp => {
-        if(!resp_id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        return res.status(200).json(resp.value);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'insurance query failed';
         return next(err);
@@ -21,6 +22,7 @@ let getInsuranceByEmail = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'insurance query failed';
         return next(err);
@@ -34,6 +36,7 @@ let getInsuranceByName = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'insurance query failed';
         return next(err);
@@ -47,6 +50,7 @@ let getInsuranceByTel = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'insurance query failed';
         return next(err);
@@ -60,6 +64,7 @@ let getAllInsurances = (req, res, next) => {
         return res.status(200).json(resp.rows);
     })
     .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
         err.status = 500;
         err.msg = 'insurance query failed';
         return next(err);
@@ -77,8 +82,7 @@ exports.getInsurances = (req, res, next) => {
 exports.createInsurance = (req, res, next) => {
     insurances.createInsurance(req.body.insurance)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.insurance);
     })
     .catch(err => {
         err.status = 500;
@@ -90,8 +94,7 @@ exports.createInsurance = (req, res, next) => {
 exports.updateInsurance = (req, res, next) => {
     insurances.updateInsurance(req.body.insurance)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        if(typeof resp.cas == 'number') return res.status(200).json(req.body.insurance);
     })
     .catch(err => {
         err.status = 500;
