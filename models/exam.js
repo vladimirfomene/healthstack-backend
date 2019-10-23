@@ -1,23 +1,31 @@
+const util = require('util');
 const { DB_HOST, DB_NAME } = require('../config/database_setup');
-const nano = require('nano')(DB_HOST);
-const db = nano.db.use(DB_NAME);
+const couchbase = require('couchbase');
+const bucket = (new couchbase.Cluster(DB_HOST)).openBucket(DB_NAME);
 
 exports.createExam = (exam) => {
-    return db.insert(exam);
+    let insert = util.promisify(bucket.insert);
+    return insert(exam.key, exam);
 };
 
 exports.getExams = () => {
-    return db.view('_design/exam', 'exams-view');
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['exam']);
 };
 
 exports.getExamById = (id) => {
-    return db.get(id);
+    let get = util.promisify(bucket.get);
+    return get(id);
 };
 
 exports.getExamByName = (name) => {
-    return db.view('_design/exam', 'examName-view');
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND name=$2';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['exam', name]);
 }
 
 exports.updateExam = (exam) => {
-    return db.atomic('_design/exam', 'inplace', exam._id, exam);
+    let upsert = util.promisify(bucket.upsert);
+    return upsert(exam.key, exam);
 };
