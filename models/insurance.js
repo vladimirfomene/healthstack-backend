@@ -1,38 +1,44 @@
+const util = require('util');
 const { DB_HOST, DB_NAME } = require('../config/database_setup');
-const nano = require('nano')(DB_HOST);
-const db = nano.db.use(DB_NAME);
+const couchbase = require('couchbase');
+const bucket = (new couchbase.Cluster(DB_HOST)).openBucket(DB_NAME);
 
 exports.getInsuranceById = (id) => {
-    return db.get(id)
+    let get = util.promisify(bucket.get);
+    return get(id);
 };
 
 exports.getInsuranceByName = (name) => {
-    return db.view('_design/insurance', 'name-view', {
-        'key': name
-    });
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(name) LIKE %$2%';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['insurance', name.toLowerCase()]);
 };
 
 exports.getInsuranceByEmail = (email) => {
-    return db.view('_design/insurance', 'email-view', {
-        'key': email
-    });
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(email) LIKE %$2%';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['insurance', email.toLowerCase()]);
 };
 
 exports.getInsuranceByTel = (tel) => {
-    return db.view('_design/insurance', 'tel-view', {
-        'key': tel
-    });
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND tel LIKE %$2%';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['insurance', tel]);
 };
 
 exports.createInsurance = (insurance) => {
-    return db.insert(insurance);
+    let insert = util.promisify(bucket.insert);
+    return insert(insurance.key, insurance);
 };
 
 exports.getInsurances = () => {
-    return db.view('_design/insurance', 'name-view');
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['insurance']);
 };
 
 exports.updateInsurance = (insurance) => {
-    return db.atomic('_design/insurance', 'inplace', insurance._id, insurance);
+    let upsert = util.promisify(bucket.upsert);
+    return upsert(insurance.key, insurance);
 };
 
