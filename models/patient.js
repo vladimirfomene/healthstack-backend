@@ -1,33 +1,38 @@
+const util = require('util');
 const { DB_HOST, DB_NAME } = require('../config/database_setup');
-const nano = require('nano')(DB_HOST);
-const db = nano.db.use(DB_NAME);
+const couchbase = require('couchbase');
+const bucket = (new couchbase.Cluster(DB_HOST)).openBucket(DB_NAME);
 
 exports.getPatientById = (id) => {
-    return db.get(id)
+    let get = util.promisify(bucket.get);
+    return get(id);
 };
 
 exports.getPatientByName = (name) => {
-    return db.view('_design/patient', 'tel-view', {
-        'key': phoneNumber
-    });
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(name) LIKE %$2%';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['patient', name.toLowerCase()]);
 };
 
 exports.getPatients = () => {
-    return db.view('_design/patient', 'patients-view');
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['patient']);
 }
 
 exports.getPatientByEmail = (email) => {
-    return db.view('_design/patient', 'email-view', {
-        'key': email
-    });
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(email) LIKE %$2%';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['patient', email.toLowerCase()]);
 };
 
 exports.getPatientByPhoneNumber = (phoneNumber) => {
-    return db.view('_design/patient', 'tel-view', {
-        'key': phoneNumber
-    });
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND phoneNumber LIKE %$2%';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['patient', phoneNumber]);
 };
 
 exports.createPatient = (patient) => {
-    return db.insert(patient);
+    let insert = util.promisify(bucket.insert);
+    return insert(patient.key, patient);
 }
