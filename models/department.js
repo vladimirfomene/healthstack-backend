@@ -1,26 +1,32 @@
+const util = require('util');
 const { DB_HOST, DB_NAME } = require('../config/database_setup');
-const nano = require('nano')(DB_HOST);
-const db = nano.db.use(DB_NAME);
+const couchbase = require('couchbase');
+const bucket = (new couchbase.Cluster(DB_HOST)).openBucket(DB_NAME);
 
 
 exports.getDepartmentById = (id) => {
-    return db.get(id);
+    let get = util.promisify(bucket.get);
+    return get(id);
 };
 
 exports.getDepartmentByName = (name) => {
-    return db.view('_design/department', 'name-view', {
-        'key': name
-    });
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(name) LIKE %$2%';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['department', name.toLowerCase()]);
 };
 
 exports.createDepartment = (department) => {
-    return db.insert(department);
+    let insert = util.promisify(bucket.insert);
+    return insert(invoice.key, invoice);
 };
 
 exports.getDepartments = () => {
-    return db.view('_design/department', 'name-view');
+    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
+    let query = util.promisify(bucket.query);
+    return query(couchbase.N1qlQuery.fromString(queryString), ['department']);
 };
 
 exports.updateDepartment = (department) => {
-    return db.atomic('_design/department', 'inplace', department._id, department);
+    let upsert = util.promisify(bucket.upsert);
+    return upsert(department.key, department);
 };
