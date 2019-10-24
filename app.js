@@ -1,5 +1,6 @@
 const express = require('express');
 const logger = require('morgan');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
 const router = express.Router();
@@ -20,6 +21,9 @@ const transactions = require('./controllers/transaction');
 
 
 if(app.get('env') === 'development') app.use(logger('dev'));
+app.use(cors({
+    origin: 'http://localhost:8080'
+}))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
@@ -28,7 +32,7 @@ app.use(bodyParser.json())
 // Routes
 //==================================
 router.route('/api/users/:id')
-    .get(users.getUser)
+    .get(users.getUserById)
     .put(users.updateUser);
 router.route('/api/users')
     .get(users.getUsers)
