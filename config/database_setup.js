@@ -1,2 +1,2 @@
-exports.DB_HOST = 'http://localhost:8091';
+exports.DB_HOST = 'couchbase://localhost/';
 exports.DB_NAME = 'centre-pasteur-yaounde';
