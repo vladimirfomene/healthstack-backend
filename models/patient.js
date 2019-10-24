@@ -1,38 +1,64 @@
-const util = require('util');
 const { DB_HOST, DB_NAME } = require('../config/database_setup');
 const couchbase = require('couchbase');
-const bucket = (new couchbase.Cluster(DB_HOST)).openBucket(DB_NAME);
+const cluster = new couchbase.Cluster(DB_HOST);
+cluster.authenticate('Administrator', 'fomeneodiwuor');
+const bucket = cluster.openBucket(DB_NAME);
 
 exports.getPatientById = (id) => {
-    let get = util.promisify(bucket.get);
-    return get(id);
+    return new Promise((resolve, reject) => {
+        bucket.get(id, (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
 };
 
 exports.getPatientByName = (name) => {
     let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(name) LIKE %$2%';
-    let query = util.promisify(bucket.query);
-    return query(couchbase.N1qlQuery.fromString(queryString), ['patient', name.toLowerCase()]);
+    return new Promise((resolve, reject) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['patient', name.toLowerCase()], (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+
+    });
 };
 
 exports.getPatients = () => {
     let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
-    let query = util.promisify(bucket.query);
-    return query(couchbase.N1qlQuery.fromString(queryString), ['patient']);
-}
+    return new Promise((resolve, reject) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['patient'], (err, result) => {
+            if(err) reject(err)
+            resolve(result);
+        });
+    });
+};
 
 exports.getPatientByEmail = (email) => {
     let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(email) LIKE %$2%';
-    let query = util.promisify(bucket.query);
-    return query(couchbase.N1qlQuery.fromString(queryString), ['patient', email.toLowerCase()]);
+    return new Promise((resolve, reject) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['patient', email.toLowerCase()], (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
 };
 
 exports.getPatientByPhoneNumber = (phoneNumber) => {
     let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND phoneNumber LIKE %$2%';
-    let query = util.promisify(bucket.query);
-    return query(couchbase.N1qlQuery.fromString(queryString), ['patient', phoneNumber]);
+    return new Promise((resolve, reject) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['patient', phoneNumber], (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
 };
 
 exports.createPatient = (patient) => {
-    let insert = util.promisify(bucket.insert);
-    return insert(patient.key, patient);
-}
+    return new Promise((resolve, reject) => {
+        bucket.insert(patient.key, patient, (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
+};

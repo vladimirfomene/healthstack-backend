@@ -1,23 +1,32 @@
-const util = require('util');
 const { DB_HOST, DB_NAME } = require('../config/database_setup');
 const couchbase = require('couchbase');
-const bucket = (new couchbase.Cluster(DB_HOST)).openBucket(DB_NAME);
+const cluster = new couchbase.Cluster(DB_HOST);
+cluster.authenticate('Administrator', 'fomeneodiwuor');
+const bucket = cluster.openBucket(DB_NAME);
 
 exports.getLaboratoryById = (id) => {
-    let get = util.promisify(bucket.get);
-    return get(id);
+    return new Promise((resolve, reject) => {
+        bucket.get(id, (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
 };
 
 exports.createLaboratory = (laboratory) => {
-    let insert = util.promisify(bucket.insert);
-    return insert(laboratory.key, laboratory);
+    return new Promise((resolve, reject) => {
+        bucket.insert(laboratory.key, laboratory, (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
 }
 
 exports.updateLaboratory = (laboratory) => {
-    let upsert = util.promisify(bucket.upsert);
-    return upsert(laboratory.key, laboratory);
-};
-
-exports.addLaboratoryLogo = () => {
-
+    return new Promise((resolve, reject) {
+        bucket.upsert(laboratory.key, laboratory, (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
 };

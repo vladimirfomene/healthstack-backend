@@ -1,31 +1,52 @@
-const util = require('util');
 const { DB_HOST, DB_NAME } = require('../config/database_setup');
 const couchbase = require('couchbase');
-const bucket = (new couchbase.Cluster(DB_HOST)).openBucket(DB_NAME);
+const cluster = new couchbase.Cluster(DB_HOST);
+cluster.authenticate('Administrator', 'fomeneodiwuor');
+const bucket = cluster.openBucket(DB_NAME);
 
 exports.createExam = (exam) => {
-    let insert = util.promisify(bucket.insert);
-    return insert(exam.key, exam);
+    return new Promise((resolve, reject) => {
+        bucket.insert(exam.key, exam, (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
 };
 
 exports.getExams = () => {
     let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
-    let query = util.promisify(bucket.query);
-    return query(couchbase.N1qlQuery.fromString(queryString), ['exam']);
+    return new Promise((resolve, reject) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['exam'], (err, result) => {
+            if(err) reject(err);
+            resolve(err);
+        });
+    });
 };
 
 exports.getExamById = (id) => {
-    let get = util.promisify(bucket.get);
-    return get(id);
+    return new Promise((resolve, reject) => {
+        bucket.get(id, (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    }
 };
 
 exports.getExamByName = (name) => {
     let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND name=$2';
-    let query = util.promisify(bucket.query);
-    return query(couchbase.N1qlQuery.fromString(queryString), ['exam', name]);
-}
+    return new Promise((resolve, reject) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['exam', name], (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
+};
 
 exports.updateExam = (exam) => {
-    let upsert = util.promisify(bucket.upsert);
-    return upsert(exam.key, exam);
+    return new Promise((resolve, reject) => {
+        bucket.upsert(exam.key, exam, (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
 };

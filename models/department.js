@@ -1,32 +1,54 @@
-const util = require('util');
 const { DB_HOST, DB_NAME } = require('../config/database_setup');
 const couchbase = require('couchbase');
-const bucket = (new couchbase.Cluster(DB_HOST)).openBucket(DB_NAME);
+const cluster = new couchbase.Cluster(DB_HOST);
+cluster.authenticate('Administrator', 'fomeneodiwuor');
+const bucket = cluster.openBucket(DB_NAME);
 
 
 exports.getDepartmentById = (id) => {
-    let get = util.promisify(bucket.get);
-    return get(id);
+    return new Promise((resolve, reject) => {
+        bucket.get(id, (err, result) => {
+            if(err) reject(err);
+            resolve(result)
+        });
+    });
 };
 
 exports.getDepartmentByName = (name) => {
     let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(name) LIKE %$2%';
-    let query = util.promisify(bucket.query);
-    return query(couchbase.N1qlQuery.fromString(queryString), ['department', name.toLowerCase()]);
+
+    return new Promise((resolve, reject) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['department', name.toLowerCase()], (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
 };
 
 exports.createDepartment = (department) => {
-    let insert = util.promisify(bucket.insert);
-    return insert(invoice.key, invoice);
+    return new Promise((resolve, reject) => {
+        bucket.insert(department.key, department, (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
 };
 
 exports.getDepartments = () => {
     let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
-    let query = util.promisify(bucket.query);
-    return query(couchbase.N1qlQuery.fromString(queryString), ['department']);
+    return new Promise((resolve, reject) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['department'], (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
 };
 
 exports.updateDepartment = (department) => {
-    let upsert = util.promisify(bucket.upsert);
-    return upsert(department.key, department);
+    return new Promise((resolve, reject) => {
+        bucket.upsert(department.key, department, (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
 };
