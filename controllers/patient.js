@@ -15,9 +15,9 @@ exports.getPatientById = (req, res, next) => {
 };
 
 exports.createPatient = (req, res, next) => {
-    patients.createPatient(req.body.patient)
+    patients.createPatient(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(req.body.patient);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;
@@ -37,7 +37,7 @@ let getPatientByName = (req, res, next) => {
     patients.getPatientByName(req.query.name)
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -51,7 +51,7 @@ let getPatientByEmail = (req, res, next) => {
     patients.getPatientByEmail(req.query.email)
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -65,7 +65,7 @@ let getPatientByPhoneNumber = (req, res, next) => {
     patients.getPatientByPhoneNumber(req.query.tel)
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -79,7 +79,7 @@ let getAllPatients = (req, res, next) => {
     patients.getPatients()
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});

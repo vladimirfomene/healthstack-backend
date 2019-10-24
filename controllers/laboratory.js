@@ -15,9 +15,9 @@ exports.getLaboratoryById = (req, res, next) => {
 };
 
 exports.createLaboratory = (req, res, next) => {
-    laboratories.createLaboratory(req.body.laboratory)
+    laboratories.createLaboratory(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(req.body.laboratory);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;
@@ -27,9 +27,9 @@ exports.createLaboratory = (req, res, next) => {
 };
 
 exports.updateLaboratory = (req, res, next) => {
-    laboratories.updateLaboratory(req.body.laboratory)
+    laboratories.updateLaboratory(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(req.body.laboratory);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;

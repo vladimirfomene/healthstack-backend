@@ -16,9 +16,9 @@ exports.getExamById = (req, res, next) => {
 };
 
 exports.createExam = (req, res, next) => {
-    exams.createExam(req.body.exam)
+    exams.createExam(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(req.body.exam);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;
@@ -28,9 +28,9 @@ exports.createExam = (req, res, next) => {
 };
 
 exports.updateExam = (req, res, next) => {
-    exams.updateExam(req.body.exam)
+    exams.updateExam(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(req.body.exam);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;
@@ -43,7 +43,7 @@ let getAllExams = (req, res, next) => {
     exams.getExams()
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -57,7 +57,7 @@ let getExamByName = (req, res, next) => {
     exams.getExamByName(req.query.name)
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});

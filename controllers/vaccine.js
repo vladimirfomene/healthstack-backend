@@ -42,7 +42,7 @@ let getVaccineByName = (req, res, next) => {
     vaccines.getVaccineByName(req.query.name)
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -56,7 +56,7 @@ let getAllVaccines = (req, res, next) => {
     vaccines.getVaccines()
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});

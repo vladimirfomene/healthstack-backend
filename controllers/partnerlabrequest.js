@@ -16,9 +16,9 @@ exports.getPartnerLabRequestById = (req, res, next) => {
 };
 
 exports.createPartnerLabRequest = (req, res, next) => {
-    partnerLabRequests.createPartnerLabRequest(req.body.partnerLabRequest)
+    partnerLabRequests.createPartnerLabRequest(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(req.body.partnerLabRequest);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;
@@ -28,9 +28,9 @@ exports.createPartnerLabRequest = (req, res, next) => {
 };
 
 exports.updatePartnerLabRequest = (req, res, next) => {
-    partnerLabRequests.updatePartnerLabRequest(req.body.partnerLabRequest)
+    partnerLabRequests.updatePartnerLabRequest(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(req.body.partnerLabRequest);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;
@@ -43,7 +43,7 @@ exports.getLabRequestByPartnerLab = (req, res, next) => {
     partnerLabRequests.getLabRequestByPartnerLab()
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});

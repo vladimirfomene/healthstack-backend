@@ -19,7 +19,7 @@ let getInsuranceByEmail = (req, res, next) => {
     insurances.getInsuranceByEmail(req.query.email)
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -33,7 +33,7 @@ let getInsuranceByName = (req, res, next) => {
     insurances.getInsuranceByName(req.query.name)
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -47,7 +47,7 @@ let getInsuranceByTel = (req, res, next) => {
     insurances.getInsuranceByTel(req.query.tel)
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -61,7 +61,7 @@ let getAllInsurances = (req, res, next) => {
     insurances.getInsurances()
     .then(resp => {
         if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -80,9 +80,9 @@ exports.getInsurances = (req, res, next) => {
 };
 
 exports.createInsurance = (req, res, next) => {
-    insurances.createInsurance(req.body.insurance)
+    insurances.createInsurance(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(req.body.insurance);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;
@@ -92,9 +92,9 @@ exports.createInsurance = (req, res, next) => {
 };
 
 exports.updateInsurance = (req, res, next) => {
-    insurances.updateInsurance(req.body.insurance)
+    insurances.updateInsurance(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(req.body.insurance);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;

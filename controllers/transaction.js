@@ -36,9 +36,14 @@ exports.getTransactionById = (req, res, next) => {
 };
 
 exports.createTransaction = (req, res, next) => {
-    transactions.createTransaction(req.body.transaction)
+    transactions.createTransaction(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(req.body.transaction);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
+    })
+    .catch(err => {
+        err.status = 500;
+        err.msg = 'transaction creation failed';
+        return next(err);
     })
 };
 

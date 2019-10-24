@@ -23,7 +23,7 @@ exports.getDepartments = (req, res, next) => {
 let getDepartmentByName = (req, res, next) => {
     departments.getDepartmentByName(req.query.name)
     .then(resp => {
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -36,7 +36,7 @@ let getDepartmentByName = (req, res, next) => {
 let getAllDepartments = (req, res, next) => {
     departments.getDepartments()
     .then(resp => {
-        return res.status(200).json(resp.rows);
+        return res.status(200).json(resp);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -47,9 +47,9 @@ let getAllDepartments = (req, res, next) => {
 };
 
 exports.createDepartment = (req, res, next) => {
-    departments.createDepartment(req.body.department)
+    departments.createDepartment(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(req.body.department);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;
@@ -59,9 +59,9 @@ exports.createDepartment = (req, res, next) => {
 };
 
 exports.updateDepartment = (req, res, next) => {
-    departments.updateDepartment(req.body.department)
+    departments.updateDepartment(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(req.body.department);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;
