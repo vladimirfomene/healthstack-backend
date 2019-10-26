@@ -15,7 +15,7 @@ exports.getDepartmentById = (id) => {
 };
 
 exports.getDepartmentByName = (name) => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(name) LIKE %$2%';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND LOWER(name) LIKE %$2%';
 
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['department', name.toLowerCase()], (err, result) => {
@@ -35,7 +35,7 @@ exports.createDepartment = (department) => {
 };
 
 exports.getDepartments = () => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['department'], (err, result) => {
             if(err) reject(err);

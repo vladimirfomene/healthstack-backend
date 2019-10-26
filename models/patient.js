@@ -14,7 +14,7 @@ exports.getPatientById = (id) => {
 };
 
 exports.getPatientByName = (name) => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(name) LIKE %$2%';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND LOWER(name) LIKE \'%' + name + '%\'';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['patient', name.toLowerCase()], (err, result) => {
             if(err) reject(err);
@@ -25,7 +25,7 @@ exports.getPatientByName = (name) => {
 };
 
 exports.getPatients = () => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['patient'], (err, result) => {
             if(err) reject(err)
@@ -35,7 +35,7 @@ exports.getPatients = () => {
 };
 
 exports.getPatientByEmail = (email) => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(email) LIKE %$2%';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND LOWER(email) LIKE \'%' + email + '%\'';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['patient', email.toLowerCase()], (err, result) => {
             if(err) reject(err);
@@ -45,7 +45,7 @@ exports.getPatientByEmail = (email) => {
 };
 
 exports.getPatientByPhoneNumber = (phoneNumber) => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND phoneNumber LIKE %$2%';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND telephone LIKE \'%' + phoneNumber + '%\'';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['patient', phoneNumber], (err, result) => {
             if(err) reject(err);

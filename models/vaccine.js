@@ -15,7 +15,7 @@ exports.createVaccine = (vaccine) => {
 }
 
 exports.getVaccines = () => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['vaccine'], (err, result) => {
             if(err) reject(err);
@@ -34,9 +34,9 @@ exports.getVaccineById = (id) => {
 };
 
 exports.getVaccineByName = (name) => {
-    let queryString = 'SELECT * FROM $1 ' +  DB_NAME + 'WHERE type=$1 AND LOWER(name) LIKE %$2%';
+    let queryString = 'SELECT * FROM $1  `' +  DB_NAME + '` WHERE type=$1 AND LOWER(name) LIKE \'%' + name.toLowerCase() + '%\'';
     return new Promise((resolve, reject) => {
-        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['vaccine', name.toLowerCase()], (err, result) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['vaccine'], (err, result) => {
             if(err) reject(err);
             resolve(result);
         });

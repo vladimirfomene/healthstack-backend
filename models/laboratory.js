@@ -23,7 +23,7 @@ exports.createLaboratory = (laboratory) => {
 }
 
 exports.updateLaboratory = (laboratory) => {
-    return new Promise((resolve, reject) {
+    return new Promise((resolve, reject) => {
         bucket.upsert(laboratory.key, laboratory, (err, result) => {
             if(err) reject(err);
             resolve(result);

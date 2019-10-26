@@ -14,7 +14,7 @@ exports.getInvoiceById = (id) => {
 };
 
 exports.getInvoices = () => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['invoice'], (err, result) => {
             if(err) reject(err);
@@ -24,7 +24,7 @@ exports.getInvoices = () => {
 };
 
 exports.getInvoiceByName = (name) => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(name) LIKE %$2%';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND LOWER(name) LIKE %$2%';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['invoice', name.toLowerCase()], (err, result) => {
             if(err) reject(err);
@@ -34,7 +34,7 @@ exports.getInvoiceByName = (name) => {
 };
 
 exports.getInvoiceByEmail = (email) => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(email) LIKE %$2%';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND LOWER(email) LIKE %$2%';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['invoice', email.toLowerCase()], (err, result) => {
             if(err) reject(err);
@@ -44,7 +44,7 @@ exports.getInvoiceByEmail = (email) => {
 };
 
 exports.getInvoiceByTel = (tel) => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND tel LIKE %$2%';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND tel LIKE %$2%';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['invoice', tel], (err, result) => {
             if(err) reject(err);

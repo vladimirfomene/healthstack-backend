@@ -5,7 +5,7 @@ cluster.authenticate('Administrator', 'fomeneodiwuor');
 const bucket = cluster.openBucket(DB_NAME);
 
 exports.getTransactions = () => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['transaction'], (err, result) => {
             if(err) reject(err);
@@ -24,7 +24,7 @@ exports.getTransactionById = (id) => {
 };
 
 exports.getTransactionsWithLabReq = () => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + ' AS t JOIN' + DB_NAME + 'AS L ON KEYS t.lab_request';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '`  AS t JOIN' + DB_NAME + 'AS L ON KEYS t.lab_request';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), (err, result) => {
             if(err) reject(err);

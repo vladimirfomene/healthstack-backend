@@ -15,9 +15,9 @@ exports.getPartnerLabById = (id) => {
 };
 
 exports.getPartnerLabByName = (name) => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(name) LIKE %$2%';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND LOWER(name) LIKE \'%' + name.toLowerCase() + '%\'';
     return new Promise((resolve, reject) => {
-        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab', name.toLowerCase()], (err, result) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab'], (err, result) => {
             if(err) reject(err);
             resolve(result);
         });
@@ -25,9 +25,9 @@ exports.getPartnerLabByName = (name) => {
 };
 
 exports.getPartnerLabByEmail = (email) => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND LOWER(email) LIKE %$2%';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND LOWER(email) LIKE \'%' + email.toLowerCase() + '%\'';
     return new Promise((resolve, reject) => {
-        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab', email.toLowerCase()], (err, result) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab'], (err, result) => {
             if(err) reject(err);
             resolve(result);
         });
@@ -35,9 +35,9 @@ exports.getPartnerLabByEmail = (email) => {
 };
 
 exports.getPartnerLabByTel = (tel) => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1 AND tel LIKE %$2%';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND tel LIKE \'%' + tel + '%\'';
     return new Promise((resolve, reject) => {
-        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab', tel], (err, result) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab'], (err, result) => {
             if(err) reject(err);
             resolve(result);
         });
@@ -45,7 +45,7 @@ exports.getPartnerLabByTel = (tel) => {
 };
 
 exports.getPartnerLabs = () => {
-    let queryString = 'SELECT * FROM' +  DB_NAME + 'WHERE type=$1';
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['partner_lab'], (err, result) => {
             if(err) reject(err);
@@ -56,7 +56,7 @@ exports.getPartnerLabs = () => {
 
 exports.createPartnerLabs = (partnerLab) => {
     return new Promise((resolve, reject) => {
-        bucket.insert(partner_lab.key, partner_lab, (err, result) => {
+        bucket.insert(partnerLab.key, partnerLab, (err, result) => {
             if(err) reject(err);
             resolve(result);
         });
@@ -65,7 +65,7 @@ exports.createPartnerLabs = (partnerLab) => {
 
 exports.updatePartnerLabs = (partnerLab) => {
     return new Promise((resolve, reject) => {
-        bucket.upsert(partner_lab.key, partner_lab, (err, result) => {
+        bucket.upsert(partnerLab.key, partnerLab, (err, result) => {
             if(err) reject(err);
             resolve(result);
         });
