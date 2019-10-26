@@ -4,8 +4,7 @@ const couchbase = require('couchbase');
 exports.getPartnerLabRequestById = (req, res, next) => {
     partnerLabRequests.getPartnerLabRequestById(req.params.id)
     .then(resp => {
-        if(!resp._id) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        return res.status(200).json(resp.value);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -40,9 +39,9 @@ exports.updatePartnerLabRequest = (req, res, next) => {
 };
 
 exports.getLabRequestByPartnerLab = (req, res, next) => {
-    partnerLabRequests.getLabRequestByPartnerLab()
+    partnerLabRequests.getLabRequestByPartnerLab(req.query.partner_lab)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {

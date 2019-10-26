@@ -18,7 +18,7 @@ exports.getInsuranceById = (req, res, next) => {
 let getInsuranceByEmail = (req, res, next) => {
     insurances.getInsuranceByEmail(req.query.email)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -32,7 +32,7 @@ let getInsuranceByEmail = (req, res, next) => {
 let getInsuranceByName = (req, res, next) => {
     insurances.getInsuranceByName(req.query.name)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -46,7 +46,7 @@ let getInsuranceByName = (req, res, next) => {
 let getInsuranceByTel = (req, res, next) => {
     insurances.getInsuranceByTel(req.query.tel)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -60,7 +60,7 @@ let getInsuranceByTel = (req, res, next) => {
 let getAllInsurances = (req, res, next) => {
     insurances.getInsurances()
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {

@@ -42,7 +42,7 @@ exports.updateExam = (req, res, next) => {
 let getAllExams = (req, res, next) => {
     exams.getExams()
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -56,7 +56,7 @@ let getAllExams = (req, res, next) => {
 let getExamByName = (req, res, next) => {
     exams.getExamByName(req.query.name)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {

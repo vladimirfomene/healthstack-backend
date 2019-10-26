@@ -19,7 +19,7 @@ exports.getUserById = (req, res, next) => {
 let getUserByEmail = (req, res, next) => {
     users.getUserByEmail(req.query.email)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -38,7 +38,7 @@ exports.getUsers = (req, res, next) => {
 let getAllUsers = (req, res, next) => {
     users.getUsers()
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {

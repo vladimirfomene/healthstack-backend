@@ -4,7 +4,7 @@ const couchbase = require('couchbase');
 
 exports.createLabRequest = (req, res, next) => {
     labrequests.createLabRequest(req.body)
-    then(resp => {
+    .then(resp => {
         if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
@@ -42,7 +42,7 @@ exports.updateLabRequest = (req, res, next) => {
 let getLabRequestByEmail = (req, res, next) => {
     labrequests.getLabRequestByEmail(req.query.email)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -56,7 +56,7 @@ let getLabRequestByEmail = (req, res, next) => {
 let getLabRequestByName = (req, res, next) => {
     labrequests.getLabRequestByName(req.query.name)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -71,7 +71,7 @@ let getLabRequestByName = (req, res, next) => {
 let getLabRequestByPhoneNumber = (req, res, next) => {
     labrequests.getLabRequestByPhoneNumber(req.query.tel)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -93,7 +93,7 @@ exports.getLabRequests = (req, res, next) => {
 let getAllLabRequests = (req, res, next) => {
     labrequests.getLabRequests()
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {

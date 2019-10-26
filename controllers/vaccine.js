@@ -15,9 +15,9 @@ exports.getVaccineById = (req, res, next) => {
 };
 
 exports.createVaccine = (req, res, next) => {
-    vaccines.createVaccine(req.body.vaccine)
+    vaccines.createVaccine(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(resp.body.vaccine);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;
@@ -27,9 +27,9 @@ exports.createVaccine = (req, res, next) => {
 };
 
 exports.updateVaccine = (req, res, next) => {
-    vaccines.updateVaccine(req.body.vaccine)
+    vaccines.updateVaccine(req.body)
     .then(resp => {
-        if(typeof resp.cas == 'number') return res.status(200).json(resp.body.vaccine);
+        if(typeof resp.cas == 'object') return res.status(200).json(req.body);
     })
     .catch(err => {
         err.status = 500;
@@ -41,7 +41,7 @@ exports.updateVaccine = (req, res, next) => {
 let getVaccineByName = (req, res, next) => {
     vaccines.getVaccineByName(req.query.name)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -55,7 +55,7 @@ let getVaccineByName = (req, res, next) => {
 let getAllVaccines = (req, res, next) => {
     vaccines.getVaccines()
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {

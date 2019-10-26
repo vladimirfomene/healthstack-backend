@@ -36,7 +36,7 @@ exports.getPatients = (req, res, next) => {
 let getPatientByName = (req, res, next) => {
     patients.getPatientByName(req.query.name)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -50,7 +50,7 @@ let getPatientByName = (req, res, next) => {
 let getPatientByEmail = (req, res, next) => {
     patients.getPatientByEmail(req.query.email)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -62,9 +62,11 @@ let getPatientByEmail = (req, res, next) => {
 };
 
 let getPatientByPhoneNumber = (req, res, next) => {
+    console.log(req.query.tel);
     patients.getPatientByPhoneNumber(req.query.tel)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        console.log(resp);
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -78,7 +80,7 @@ let getPatientByPhoneNumber = (req, res, next) => {
 let getAllPatients = (req, res, next) => {
     patients.getPatients()
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {

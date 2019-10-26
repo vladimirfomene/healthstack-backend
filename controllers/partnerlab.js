@@ -49,7 +49,7 @@ exports.getPartnerLabs = (req, res, next) => {
 let getPartnerLabByName = (req, res, next) => {
     partnerLabs.getPartnerLabByName(req.query.name)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -63,7 +63,7 @@ let getPartnerLabByName = (req, res, next) => {
 let getPartnerLabByEmail = (req, res, next) => {
     partnerLabs.getPartnerLabByEmail(req.query.email)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -77,7 +77,7 @@ let getPartnerLabByEmail = (req, res, next) => {
 let getPartnerLabByTel = (req, res, next) => {
     partnerLabs.getPartnerLabByEmail(req.query.tel)
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
@@ -91,7 +91,7 @@ let getPartnerLabByTel = (req, res, next) => {
 let getAllPartnerLabs = (req, res, next) => {
     partnerLabs.getPartnerLabs()
     .then(resp => {
-        if(!resp.rows.length) return res.status(404).json({ msg: 'Not Found'});
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         return res.status(200).json(resp);
     })
     .catch(err => {
