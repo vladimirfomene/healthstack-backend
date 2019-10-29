@@ -42,6 +42,15 @@ exports.createTransaction = (transaction) => {
     });
 };
 
+exports.updateTransaction = (transaction) => {
+    return new Promise((resolve, reject) => {
+        bucket.upsert(transaction.key, transaction, (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
+};
+
 exports.getTransactionsPerDepartmentByTimeRange = (startDate, endDate) => {
     let queryString = 'SELECT e.department, SUM(e.price) FROM' + DB_NAME + 'AS t JOIN' + DB_NAME + 'AS l ON KEYS t.lab_request UNNEST l.exams AS e WHERE t.created_at >=$1 AND t.created_at<=$2 GROUP BY e.department' +
     'UNION SELECT SUM(v.price), `Vaccination` FROM' + DB_NAME + 'AS t JOIN' + DB_NAME + 'AS l ON KEYS t.lab_request UNNEST l.vaccines AS v WHERE t.created_at >=$1 AND t.created_at<=$2';
