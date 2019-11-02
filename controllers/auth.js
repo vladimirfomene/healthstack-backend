@@ -15,12 +15,14 @@ exports.login = async (req, res, next) => {
         if(!bcrypt.compareSync(req.body.password, (resp[0])[DB_NAME].password)) return res.status(401).json({msg: 'Not Authorized'});
         //create an access token
         let user = (resp[0])[DB_NAME];
-        delete user.password;
         delete user.refresh_token;
+
+        // delete user.password;
+        // delete user.refresh_token;
         let accessToken = jwt.sign(user, JWT_SECRET, { expiresIn: '15m' });
 
         //create a refresh token and attach it to the session object.
-        let refreshToken = jwt.sign({tokenType: 'refresh'}, JWT_SECRET, {expiresIn: '4h'});
+        let refreshToken = jwt.sign({ user }, JWT_SECRET, {expiresIn: '4h'});
         req.session.refreshToken = refreshToken;
 
         
@@ -44,8 +46,10 @@ exports.login = async (req, res, next) => {
 
 exports.logout = (req, res, next) => {
 
-    req.body.refresh_token = '';
     let user = req.body;
+    delete user.refresh_token;
+    delete user.exp;
+    delete user.iat;
     req.session = null;
     users.updateUser(user)
     .then(user => {
@@ -61,7 +65,7 @@ exports.logout = (req, res, next) => {
 
 
 exports.verifyToken = (req, res, next) => {
-    let accessToken = req.header('Authorization');
+    let accessToken = req.header('Authorization').split(" ")[1];
     jwt.verify(accessToken, JWT_SECRET, (err, decodedToken) => {
         if(err){
             err.status = 403;
@@ -76,21 +80,19 @@ exports.verifyToken = (req, res, next) => {
 
 exports.refreshToken = async (req, res, next) => {
     let refreshToken = req.session.refreshToken;
-    jwt.verify(refreshToken, JWT_SECRET, (err, decodedToken) => {
+    jwt.verify(req.session.refreshToken, JWT_SECRET, (err, decodedToken) => {
         if(err){
             err.status = 403;
             err.msg = 'Forbidden Access';
             return next(err);
         }else{
-            
-            let accessToken = jwt.sign(req.body, JWT_SECRET, { expiresIn: '15m' });
+            let user = decodedToken.user;
+            let accessToken = jwt.sign(user, JWT_SECRET, { expiresIn: '15m' });
 
-            let refreshToken = jwt.sign({tokenType: decodedToken.tokenType }, JWT_SECRET, {expiresIn: '4h'});
+            let refreshToken = jwt.sign({ user }, JWT_SECRET, {expiresIn: '4h'});
             req.session.refreshToken = refreshToken;
-
-            let user = req.body;
-            user.refresh_token = refreshToken;
             
+            user.refresh_token = refreshToken;
             users.updateUser(user)
             .then(user => {
                 return res.status(200).json({ accessToken });

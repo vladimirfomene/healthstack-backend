@@ -7,38 +7,38 @@ const bucket = cluster.openBucket(DB_NAME);
 let bktmanager = bucket.manager();
 
 //Primary INDEX
-/*bktmanager.createPrimaryIndex({ignoreExists: true}, (err, result) => {
-	if(result){
-    	console.log(result);
-	}else{
-    	console.error(err);
-	}
-});*/
+// bktmanager.createPrimaryIndex({ignoreExists: true}, (err, result) => {
+// 	if(result){
+//     	console.log(result);
+// 	}else{
+//     	console.error(err);
+// 	}
+// });
 
 
 //Email INDEX
-/*bktmanager.createIndex('email_index', ['email'], (err, result) => {
-	if(result){
-		console.log(result)
-	}else{
-		console.error(err);
-	}
-});*/
+// bktmanager.createIndex('email_index', ['email'], (err, result) => {
+// 	if(result){
+// 		console.log(result)
+// 	}else{
+// 		console.error(err);
+// 	}
+// });
 
 //Name INDEX
-/*bktmanager.createIndex('name_index', ['name'], (err, result) => {
-	if(result){
-		console.log(result)
-	}else{
-		console.error(err);
-	}
-});*/
+// bktmanager.createIndex('name_index', ['name'], (err, result) => {
+// 	if(result){
+// 		console.log(result)
+// 	}else{
+// 		console.error(err);
+// 	}
+// });
 
 //tel INDEX
-bktmanager.createIndex('tel_index', ['telephone'], (err, result) => {
-	if(result){
-		console.log(result)
-	}else{
-		console.error(err);
-	}
-});
+// bktmanager.createIndex('tel_index', ['telephone'], (err, result) => {
+// 	if(result){
+// 		console.log(result)
+// 	}else{
+// 		console.error(err);
+// 	}
+// });
