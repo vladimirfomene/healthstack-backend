@@ -9,8 +9,10 @@ const bucket = cluster.openBucket(DB_NAME);
 const users = require('../models/user');
 
 exports.login = async (req, res, next) => {
+    
     users.getUserByEmail(req.body.email)
     .then(resp => {
+        console.log((resp[0])[DB_NAME]);
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
         if(!bcrypt.compareSync(req.body.password, (resp[0])[DB_NAME].password)) return res.status(401).json({msg: 'Not Authorized'});
         //create an access token
