@@ -1,5 +1,6 @@
 const users = require('../models/user');
 const couchbase = require('couchbase');
+const { DB_NAME } = require('../config/database_setup');
 
 
 

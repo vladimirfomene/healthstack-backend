@@ -1,5 +1,6 @@
 const exams = require('../models/exam');
 const couchbase = require('couchbase');
+const { DB_NAME } = require('../config/database_setup');
 
 
 exports.getExamById = (req, res, next) => {

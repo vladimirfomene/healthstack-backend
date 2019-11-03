@@ -1,5 +1,6 @@
 const transactions = require('../models/transaction');
 const couchbase = require('couchbase');
+const { DB_NAME } = require('../config/database_setup');
 
 
 exports.getTransactions = (req, res, next) => {

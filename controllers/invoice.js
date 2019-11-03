@@ -1,5 +1,6 @@
 const invoices = require('../models/invoice');
 const couchbase = require('couchbase');
+const { DB_NAME } = require('../config/database_setup');
 
 exports.getInvoiceById = (req, res, next) => {
     return invoices.getInvoiceById(req.params.id)

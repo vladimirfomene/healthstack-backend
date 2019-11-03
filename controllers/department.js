@@ -1,5 +1,6 @@
 const departments = require('../models/department');
 const couchbase = require('couchbase');
+const { DB_NAME } = require('../config/database_setup');
 
 
 exports.getDepartmentById = (req, res, next) => {

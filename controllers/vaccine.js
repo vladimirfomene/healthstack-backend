@@ -1,5 +1,6 @@
 const vaccines = require('../models/vaccine');
 const couchbase = require('couchbase');
+const { DB_NAME } = require('../config/database_setup');
 
 exports.getVaccineById = (req, res, next) => {
     vaccines.getVaccineById(req.params.id)

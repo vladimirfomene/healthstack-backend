@@ -1,5 +1,6 @@
 const patients = require('../models/patient');
 const couchbase = require('couchbase');
+const { DB_NAME } = require('../config/database_setup');
 
 exports.getPatientById = (req, res, next) => {
     patients.getPatientById(req.params.id)

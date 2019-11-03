@@ -1,5 +1,6 @@
 const partnerLabRequests = require('../models/partnerlabrequest');
 const couchbase = require('couchbase');
+const { DB_NAME } = require('../config/database_setup');
 
 exports.getPartnerLabRequestById = (req, res, next) => {
     partnerLabRequests.getPartnerLabRequestById(req.params.id)

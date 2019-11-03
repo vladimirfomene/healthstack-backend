@@ -1,5 +1,7 @@
 const laboratories = require('../models/laboratory');
 const couchbase = require('couchbase');
+const { DB_NAME } = require('../config/database_setup');
+
 
 exports.getLaboratoryById = (req, res, next) => {
     laboratories.getLaboratoryById(req.params.id)

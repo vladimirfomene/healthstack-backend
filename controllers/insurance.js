@@ -1,5 +1,6 @@
 const insurances = require('../models/insurance');
 const couchbase = require('couchbase');
+const { DB_NAME } = require('../config/database_setup');
 
 
 exports.getInsuranceById = (req, res, next) => {
