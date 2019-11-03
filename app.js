@@ -6,9 +6,12 @@ const bodyParser = require('body-parser');
 const { COOKIE_SECRET } = require('./config/database_setup');
 const app = express();
 const router = express.Router();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+// const http = require('http').createServer(app);
+// const io = require('socket.io')(http);
 const port = 3000;
+
+const server = app.listen(port, () => console.log(`HealthStack is listening on port ${port}`));
+const io = require('socket.io').listen(server);
 
 const users = require('./controllers/user');
 const userModel = require('./models/user');
@@ -37,9 +40,11 @@ const transactionModel = require('./models/transaction');
 const auth = require('./controllers/auth');
 
 
+
 if(app.get('env') === 'development') app.use(logger('dev'));
 app.use(cors({
-    origin: 'http://localhost:8080'
+    credentials: true,
+    origin: "http://127.0.0.1:8080"
 }));
 app.use(cookieSession({
     name: 'tokenSession',
@@ -130,6 +135,7 @@ app.use('/', router);
 
 //Socket Connections
 io.on('connection', (socket) => {
+    console.log("connected");
 
     //user Connections
     socket.on('create-user', (user) => {
@@ -336,6 +342,7 @@ io.on('connection', (socket) => {
     socket.on('create-patient', (patient) => {
         patientModel.createPatient(patient)
         .then(resp => {
+            console.log('Patient created');
             if(typeof resp.cas == 'object') io.emit('create-patient', patient);
         })
         .catch(err => {
@@ -413,5 +420,3 @@ if(app.get('env') === 'development'){
 		res.status(err.status || 500).json(err.msg);
     });
 }
-
-app.listen(port, () => console.log(`HealthStack is listening on port ${port}`));

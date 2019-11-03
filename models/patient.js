@@ -56,6 +56,7 @@ exports.getPatientByPhoneNumber = (phoneNumber) => {
 
 exports.createPatient = (patient) => {
     return new Promise((resolve, reject) => {
+        console.log(patient);
         bucket.insert(patient.key, patient, (err, result) => {
             if(err) reject(err);
             resolve(result);
