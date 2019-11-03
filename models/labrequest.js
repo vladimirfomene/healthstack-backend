@@ -34,7 +34,7 @@ exports.getLabRequestById = (id) => {
 exports.getLabRequestByEmail = (email) => {
     let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND LOWER(email) LIKE %$2%';
     return new Promise((resolve, reject) => {
-        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['lab_request', email.toLowerCase()], (err, result) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['labrequest', email.toLowerCase()], (err, result) => {
             if(err) reject(err);
             resolve(result);
         });
@@ -44,7 +44,7 @@ exports.getLabRequestByEmail = (email) => {
 exports.getLabRequestByName = (name) => {
     let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND LOWER(name) LIKE %$2%';
     return new Promise((resolve, reject) => {
-        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['lab_request', name.toLowerCase()], (err, result) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['labrequest', name.toLowerCase()], (err, result) => {
             if(err) reject(err);
             resolve(result);
         });
@@ -54,7 +54,17 @@ exports.getLabRequestByName = (name) => {
 exports.getLabRequestByPhoneNumber = (phoneNumber) => {
     let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND phoneNumber LIKE %$2%';
     return new Promise((resolve, reject) => {
-        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['lab_request', phoneNumber], (err, result) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['labrequest', phoneNumber], (err, result) => {
+            if(err) reject(err);
+            resolve(result);
+        });
+    });
+};
+
+exports.getLabRequestByStatus = (status) => {
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND status=$2';
+    return new Promise((resolve, reject) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['labrequest', status], (err, result) => {
             if(err) reject(err);
             resolve(result);
         });
@@ -64,7 +74,7 @@ exports.getLabRequestByPhoneNumber = (phoneNumber) => {
 exports.getLabRequests = () => {
     let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1';
     return new Promise((resolve, reject) => {
-        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['lab_request'], (err, result) => {
+        bucket.query(couchbase.N1qlQuery.fromString(queryString), ['labrequest'], (err, result) => {
             if(err) reject(err);
             resolve(result);
         });
