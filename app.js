@@ -119,7 +119,7 @@ router.route('/api/transactions')
 
 router.route('/api/login')
     .post(auth.login);
-router.route('/api/refresh_token')
+router.route('/api/refresh-token')
     .post(auth.refreshToken);
 router.route('/api/logout')
     .post(auth.verifyToken, auth.logout);
