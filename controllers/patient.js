@@ -38,7 +38,7 @@ let getPatientByName = (req, res, next) => {
     patients.getPatientByName(req.query.name)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let patients = resp.map(patient => { patient[DB_NAME] })
+        let patients = resp.map(patient => patient[DB_NAME] )
         return res.status(200).json(patients);
     })
     .catch(err => {
@@ -53,7 +53,7 @@ let getPatientByEmail = (req, res, next) => {
     patients.getPatientByEmail(req.query.email)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let patients = resp.map(patient => { patient[DB_NAME] });
+        let patients = resp.map(patient => patient[DB_NAME] );
         return res.status(200).json(patients);
     })
     .catch(err => {
@@ -70,7 +70,7 @@ let getPatientByPhoneNumber = (req, res, next) => {
     .then(resp => {
         console.log(resp);
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let patients = resp.map(patient => { patient[DB_NAME] });
+        let patients = resp.map(patient => patient[DB_NAME] );
         return res.status(200).json(patients);
     })
     .catch(err => {
@@ -85,7 +85,7 @@ let getAllPatients = (req, res, next) => {
     patients.getPatients()
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let patients = resp.map(patient => { patient[DB_NAME] })
+        let patients = resp.map(patient => patient[DB_NAME] )
         return res.status(200).json(patients);
     })
     .catch(err => {

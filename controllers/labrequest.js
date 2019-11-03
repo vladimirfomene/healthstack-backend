@@ -44,7 +44,7 @@ let getLabRequestByEmail = (req, res, next) => {
     labrequests.getLabRequestByEmail(req.query.email)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let labRequests = resp.map(labRequest => { labRequest[DB_NAME] })
+        let labRequests = resp.map(labRequest => labRequest[DB_NAME] )
         return res.status(200).json(labRequests);
     })
     .catch(err => {
@@ -59,7 +59,7 @@ let getLabRequestByName = (req, res, next) => {
     labrequests.getLabRequestByName(req.query.name)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let labRequests = resp.map(labRequest => { labRequest[DB_NAME] })
+        let labRequests = resp.map(labRequest => labRequest[DB_NAME] )
         return res.status(200).json(labRequests);
     })
     .catch(err => {
@@ -75,7 +75,7 @@ let getLabRequestByPhoneNumber = (req, res, next) => {
     labrequests.getLabRequestByPhoneNumber(req.query.tel)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let labRequests = resp.map(labRequest => { labRequest[DB_NAME] })
+        let labRequests = resp.map(labRequest => labRequest[DB_NAME] )
         return res.status(200).json(labRequests);
     })
     .catch(err => {
@@ -90,7 +90,7 @@ let getLabRequestByStatus = (req, res, next) => {
     labrequests.getLabRequestByStatus(req.query.status)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let labRequests = resp.map(labRequest => { labRequest[DB_NAME] })
+        let labRequests = resp.map(labRequest => labRequest[DB_NAME] )
         return res.status(200).json(labRequests);
     })
     .catch(err => {
@@ -114,7 +114,7 @@ let getAllLabRequests = (req, res, next) => {
     labrequests.getLabRequests()
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let labRequests = resp.map(labRequest => { labRequest[DB_NAME] })
+        let labRequests = resp.map(labRequest => labRequest[DB_NAME] );
         return res.status(200).json(labRequests);
     })
     .catch(err => {

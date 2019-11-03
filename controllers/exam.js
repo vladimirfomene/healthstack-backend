@@ -44,7 +44,7 @@ let getAllExams = (req, res, next) => {
     exams.getExams()
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let exams = resp.map(exam => { exam[DB_NAME] })
+        let exams = resp.map(exam => exam[DB_NAME] )
         return res.status(200).json(exams);
     })
     .catch(err => {
@@ -59,7 +59,7 @@ let getExamByName = (req, res, next) => {
     exams.getExamByName(req.query.name)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let exams = resp.map(exam => { exam[DB_NAME] })
+        let exams = resp.map(exam => exam[DB_NAME] )
         return res.status(200).json(exams);
     })
     .catch(err => {

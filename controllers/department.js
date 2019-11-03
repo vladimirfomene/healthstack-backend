@@ -25,7 +25,7 @@ let getDepartmentByName = (req, res, next) => {
     departments.getDepartmentByName(req.query.name)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let departments = resp.map(department => { department[DB_NAME] })
+        let departments = resp.map(department => department[DB_NAME] )
         return res.status(200).json(departments);
     })
     .catch(err => {
@@ -40,7 +40,7 @@ let getAllDepartments = (req, res, next) => {
     departments.getDepartments()
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let departments = resp.map(department => { department[DB_NAME] })
+        let departments = resp.map(department => department[DB_NAME] )
         return res.status(200).json(departments);
     })
     .catch(err => {

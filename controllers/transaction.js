@@ -13,7 +13,7 @@ let getAllTransactions = (req, res, next) => {
     transactions.getTransactions()
     .then(rows => {
         if(!rows.length) return res.status(404).json({ msg: 'Not Found'});
-        let transactions = rows.map(row => { row[DB_NAME] });
+        let transactions = rows.map(row => row[DB_NAME] );
         return res.status(200).json(transactions);
     })
     .catch(err => {
@@ -53,7 +53,7 @@ let getTransactionsWithLabReq = (req, res, next) => {
     transactions.getTransactionsWithLabReq()
     .then(rows => {
         if(!rows.length) return res.status(404).json({ msg: 'Not Found'});
-        let transactions = rows.map(row => { row[DB_NAME] });
+        let transactions = rows.map(row => row[DB_NAME] );
         return res.status(200).json(transactions);
     })
     .catch(err => {
@@ -68,7 +68,7 @@ let getTransactionsPerDepartmentByTimeRange = (req, res, next) => {
     transactions.getTransactionsPerDepartmentByTimeRange(req.query.startDate, req.query.endDate)
     .then(rows => {
         if(!rows.length) return res.status(404).json({ msg: 'Not Found'});
-        let transactions = rows.map(row => { row[DB_NAME] });
+        let transactions = rows.map(row => row[DB_NAME] );
         return res.status(200).json(transactions);
     })
     .catch(err => {

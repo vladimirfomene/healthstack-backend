@@ -43,7 +43,7 @@ exports.getLabRequestByPartnerLab = (req, res, next) => {
     partnerLabRequests.getLabRequestByPartnerLab(req.query.partner_lab)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let partnerLabRequests = resp.map(partnerLabRequest => { partnerLabRequest[DB_NAME] })
+        let partnerLabRequests = resp.map(partnerLabRequest => partnerLabRequest[DB_NAME] )
         return res.status(200).json(partnerLabRequests);
     })
     .catch(err => {

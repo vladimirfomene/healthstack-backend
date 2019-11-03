@@ -19,7 +19,7 @@ let getInvoiceByName = (req, res, next) => {
     invoices.getInvoiceByName(req.query.name)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let invoices = resp.map(invoice => { invoice[DB_NAME] })
+        let invoices = resp.map(invoice => invoice[DB_NAME] )
         return res.status(200).json(invoices);
     })
     .catch(err => {
@@ -34,7 +34,7 @@ let getInvoiceByEmail = (req, res, next) => {
     invoices.getInvoiceByEmail(req.query.email)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let invoices = resp.map(invoice => { invoice[DB_NAME] })
+        let invoices = resp.map(invoice => invoice[DB_NAME] )
         return res.status(200).json(invoices);
     })
     .catch(err => {
@@ -49,7 +49,7 @@ let getInvoiceByTel = (req, res, next) => {
     invoices.getInvoiceByTel(req.query.tel)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let invoices = resp.map(invoice => { invoice[DB_NAME] })
+        let invoices = resp.map(invoice => invoice[DB_NAME] )
         return res.status(200).json(invoices);
     })
     .catch(err => {
@@ -64,7 +64,7 @@ let getAllInvoices = (req, res, next) => {
     invoices.getInvoices()
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        let invoices = resp.map(invoice => { invoice[DB_NAME] })
+        let invoices = resp.map(invoice => invoice[DB_NAME] )
         return res.status(200).json(invoices);
     })
     .catch(err => {
