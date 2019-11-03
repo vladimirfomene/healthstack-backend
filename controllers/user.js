@@ -20,7 +20,8 @@ let getUserByEmail = (req, res, next) => {
     users.getUserByEmail(req.query.email)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        let users = resp.map(user=> { user[DB_NAME] });
+        return res.status(200).json(users);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -39,7 +40,8 @@ let getAllUsers = (req, res, next) => {
     users.getUsers()
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        let users = resp.map(user=> { user[DB_NAME] });
+        return res.status(200).json(users);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});

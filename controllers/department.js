@@ -23,7 +23,9 @@ exports.getDepartments = (req, res, next) => {
 let getDepartmentByName = (req, res, next) => {
     departments.getDepartmentByName(req.query.name)
     .then(resp => {
-        return res.status(200).json(resp);
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
+        let departments = resp.map(department => { department[DB_NAME] })
+        return res.status(200).json(departments);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -36,7 +38,9 @@ let getDepartmentByName = (req, res, next) => {
 let getAllDepartments = (req, res, next) => {
     departments.getDepartments()
     .then(resp => {
-        return res.status(200).json(resp);
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
+        let departments = resp.map(department => { department[DB_NAME] })
+        return res.status(200).json(departments);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});

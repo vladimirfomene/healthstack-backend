@@ -50,7 +50,8 @@ let getPartnerLabByName = (req, res, next) => {
     partnerLabs.getPartnerLabByName(req.query.name)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        let partnerLabs = resp.map(partnerLab => { partnerLab[DB_NAME] })
+        return res.status(200).json(partnerLabs);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -64,7 +65,8 @@ let getPartnerLabByEmail = (req, res, next) => {
     partnerLabs.getPartnerLabByEmail(req.query.email)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        let partnerLabs = resp.map(partnerLab => { partnerLab[DB_NAME] })
+        return res.status(200).json(partnerLabs);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -78,7 +80,8 @@ let getPartnerLabByTel = (req, res, next) => {
     partnerLabs.getPartnerLabByEmail(req.query.tel)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        let partnerLabs = resp.map(partnerLab => { partnerLab[DB_NAME] })
+        return res.status(200).json(partnerLabs);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -92,7 +95,8 @@ let getAllPartnerLabs = (req, res, next) => {
     partnerLabs.getPartnerLabs()
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        let partnerLabs = resp.map(partnerLab => { partnerLab[DB_NAME] })
+        return res.status(200).json(partnerLabs);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});

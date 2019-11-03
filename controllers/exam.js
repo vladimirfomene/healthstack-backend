@@ -43,7 +43,8 @@ let getAllExams = (req, res, next) => {
     exams.getExams()
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        let exams = resp.map(exam => { exam[DB_NAME] })
+        return res.status(200).json(exams);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -57,7 +58,8 @@ let getExamByName = (req, res, next) => {
     exams.getExamByName(req.query.name)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        let exams = resp.map(exam => { exam[DB_NAME] })
+        return res.status(200).json(exams);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});

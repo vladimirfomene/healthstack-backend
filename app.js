@@ -6,8 +6,6 @@ const bodyParser = require('body-parser');
 const { COOKIE_SECRET } = require('./config/database_setup');
 const app = express();
 const router = express.Router();
-// const http = require('http').createServer(app);
-// const io = require('socket.io')(http);
 const port = 3000;
 
 const server = app.listen(port, () => console.log(`HealthStack is listening on port ${port}`));
@@ -113,7 +111,7 @@ router.route('/api/patients')
     .get(auth.verifyToken, patients.getPatients);
 
 router.route('/api/partnerlabrequests/:id')
-    .get(auth.verifyToken, partnerLabRequests.getPartnerLabRequestById);
+    .get(auth.verifyToken, partnerLabRequests.getPartnerLabRequestById); 
 router.route('/api/partnerlabrequests')
     .get(auth.verifyToken, partnerLabRequests.getLabRequestByPartnerLab);
 

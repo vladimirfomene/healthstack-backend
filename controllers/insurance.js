@@ -19,7 +19,8 @@ let getInsuranceByEmail = (req, res, next) => {
     insurances.getInsuranceByEmail(req.query.email)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        let insurances = resp.map(insurance => { insurance[DB_NAME] })
+        return res.status(200).json(insurances);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -33,7 +34,8 @@ let getInsuranceByName = (req, res, next) => {
     insurances.getInsuranceByName(req.query.name)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        let insurances = resp.map(insurance => { insurance[DB_NAME] })
+        return res.status(200).json(insurances);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -47,7 +49,8 @@ let getInsuranceByTel = (req, res, next) => {
     insurances.getInsuranceByTel(req.query.tel)
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        let insurances = resp.map(insurance => { insurance[DB_NAME] })
+        return res.status(200).json(insurances);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
@@ -61,7 +64,8 @@ let getAllInsurances = (req, res, next) => {
     insurances.getInsurances()
     .then(resp => {
         if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
-        return res.status(200).json(resp);
+        let insurances = resp.map(insurance => { insurance[DB_NAME] })
+        return res.status(200).json(insurances);
     })
     .catch(err => {
         if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
