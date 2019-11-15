@@ -101,11 +101,27 @@ let getLabRequestByStatus = (req, res, next) => {
     });
 }
 
+let getLabRequestByPartnerLab = (req, res, next) => {
+    labrequests.getLabRequestByPartnerLab(req.query.partnerlab)
+    .then(resp => {
+        if(!resp.length) return res.status(404).json({ msg: 'Not Found'});
+        let labRequests = resp.map(labRequest => labRequest[DB_NAME] )
+        return res.status(200).json(labRequests);
+    })
+    .catch(err => {
+        if(err.code == couchbase.errors.keyNotFound) return res.status(404).json({ msg: 'Not Found'});
+        err.status = 500;
+        err.msg = 'labrequest query failed';
+        return next(err);
+    });
+};
+
 exports.getLabRequests = (req, res, next) => {
     if(req.query.email) return getLabRequestByEmail(req, res, next);
     if(req.query.tel) return getLabRequestByPhoneNumber(req, res, next);
     if(req.query.name) return getLabRequestByName(req, res, next);
     if(req.query.status) return getLabRequestByStatus(req, res, next);
+    if(req.query.partnerlab) return getLabRequestByPartnerLab(req, res, next);
 
     return getAllLabRequests(req, res, next);
 };
