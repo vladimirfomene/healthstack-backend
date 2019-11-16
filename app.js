@@ -35,7 +35,11 @@ const partnerLabRequests = require('./controllers/partnerlabrequest');
 const partnerLabRequestModel = require('./models/partnerlabrequest');
 const transactions = require('./controllers/transaction');
 const transactionModel = require('./models/transaction');
+const messageModel = require('./models/message');
 const auth = require('./controllers/auth');
+
+const emailHook = require('./hooks/email');
+const smsHook = require('./hooks/sms');
 
 
 
@@ -126,6 +130,11 @@ router.route('/api/refresh-token')
     .post(auth.refreshToken);
 router.route('/api/logout')
     .post(auth.verifyToken, auth.logout);
+
+router.route('/api/email')
+    .post(emailHook.updateEmailStatus);
+router.route('/api/sms')
+    .post(smsHook.updateSmsStatus);
 
 
 //Mount router
@@ -397,6 +406,19 @@ io.on('connection', (socket) => {
             err.status = 500;
             err.msg = 'transaction update failed';
             io.emit('update-transaction', err);
+        });
+    });
+
+    //message connections
+    socket.on('create-message', (message) => {
+        messageModel.createMessage(message)
+        .then(resp => {
+            if(typeof resp.cas == 'object') io.emit('create-message', message);
+        })
+        .catch(err => {
+            err.status = 500;
+            err.msg = 'message creation failed';
+            io.emit('create-message', err);
         });
     });
 });
