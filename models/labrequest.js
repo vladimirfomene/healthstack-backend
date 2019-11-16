@@ -82,7 +82,8 @@ exports.getLabRequests = () => {
 };
 
 exports.getLabRequestByPartnerLab = (partnerLabName) => {
-    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND partner_lab.name=$3';
+    console.log(DB_NAME);
+    let queryString = 'SELECT * FROM `' +  DB_NAME + '` WHERE type=$1 AND partner_lab.name=$2';
     return new Promise((resolve, reject) => {
         bucket.query(couchbase.N1qlQuery.fromString(queryString), ['labrequest', partnerLabName], (err, result) => {
             if(err) reject(err);

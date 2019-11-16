@@ -42,3 +42,47 @@ let bktmanager = bucket.manager();
 // 		console.error(err);
 // 	}
 // });
+
+//status INDEX
+// bktmanager.createIndex('status_index', ['status'], (err, result) => {
+//     if(result){
+//         console.log(result)
+//     }else{
+//         console.error(err);
+//     }
+// });
+
+//message_id index
+// bktmanager.createIndex('message_id_index', ['message_id'], (err, result) => {
+//     if(result){
+//         console.log(result)
+//     }else{
+//         console.error(err);
+//     }
+// });
+
+//Sms status index
+// bktmanager.createIndex('sms_status_id_index', ['sms.status', 'sms'], (err, result) => {
+//     if(result){
+//         console.log(result)
+//     }else{
+//         console.error(err);
+//     }
+// });
+
+// bktmanager.createIndex('partnerlab_name_index', ['partner_lab.name'], (err, result) => {
+//     if(result){
+//         console.log(result)
+//     }else{
+//         console.error(err);
+//     }
+// });
+
+bktmanager.createIndex('partnerlab_index', ['partner_lab'], (err, result) => {
+    if(result){
+        console.log(result)
+    }else{
+        console.error(err);
+    }
+});
+
